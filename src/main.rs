@@ -1,3 +1,19 @@
+use std::env;
+use std::fs;
+
 fn main() {
-    println!("Hello, world!");
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() != 2 {
+        eprintln!("usage: hexdump-rs <file>");
+        return;
+    }
+
+    let data = fs::read(&args[1]).expect("failed to read file");
+
+    for byte in data {
+        println!("{byte:02x} ");
+    }
+
+    println!()
 }
