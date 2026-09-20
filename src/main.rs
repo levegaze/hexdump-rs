@@ -11,17 +11,26 @@ fn main() {
 
     let data = fs::read(&args[1]).expect("failed to read file");
 
-    for (index, byte) in data.iter().enumerate() {
-        if index % 16 == 0 {
-            if index != 0 {
-                println!();
-            }
+    for (index, chunk) in data.chunks(16).enumerate() {
+        print!("{:08x}  ", index * 16);
 
-            print!("{index:08x}  ");
+        let mut ascii = String::new();
+
+        for byte in chunk {
+            print!("{byte:02x} ");
+
+            if (0x20..=0x7e).contains(byte) {
+                ascii.push(*byte as char);
+            } else {
+                ascii.push('.');
+            }
         }
 
-        print!("{byte:02x} ");
-    }
+        // Padding for incomplete rows.
+        for _ in chunk.len()..16 {
+            print!("   ");
+        }
 
-    println!();
+        println!(" |{ascii}|");
+    }
 }
