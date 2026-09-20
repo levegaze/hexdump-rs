@@ -11,9 +11,17 @@ fn main() {
 
     let data = fs::read(&args[1]).expect("failed to read file");
 
-    for byte in data {
-        println!("{byte:02x} ");
+    for (index, byte) in data.iter().enumerate() {
+        if index % 16 == 0 {
+            if index != 0 {
+                println!();
+            }
+
+            print!("{index:08x}  ");
+        }
+
+        print!("{byte:02x} ");
     }
 
-    println!()
+    println!();
 }
